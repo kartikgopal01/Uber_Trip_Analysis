@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uber Trip Data Analysis Results</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'uber-blue': '#1A1A2E',
+                        'uber-dark-blue': '#16213E',
+                        'uber-accent': '#0F3460',
+                        'uber-red': '#E94560'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 text-uber-blue font-sans leading-normal tracking-normal">
+    <header class="bg-uber-blue text-white sticky top-0 z-50 shadow-lg">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold flex items-center">
+                <i class="ri-car-line mr-3"></i> Uber Trip Analysis
+            </h1>
+            <ul class="flex space-x-6">
+                <li><a href="#summary" class="hover:text-uber-red transition duration-300 flex items-center">
+                    <i class="ri-dashboard-line mr-2"></i> Summary
+                </a></li>
+                <li><a href="#insights" class="hover:text-uber-red transition duration-300 flex items-center">
+                    <i class="ri-lightbulb-line mr-2"></i> Insights
+                </a></li>
+                <li><a href="#visualizations" class="hover:text-uber-red transition duration-300 flex items-center">
+                    <i class="ri-bar-chart-line mr-2"></i> Visualizations
+                </a></li>
+                <li><a href="#recommendations" class="hover:text-uber-red transition duration-300 flex items-center">
+                    <i class="ri-guidance-line mr-2"></i> Recommendations
+                </a></li>
+                
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 space-y-12">
+        <section id="summary" class="bg-white rounded-xl shadow-md p-6 transform transition duration-500 hover:scale-[1.02]" >
+            <h2 class="text-2xl font-semibold mb-4 flex items-center">
+                <i class="ri-file-chart-line mr-3 text-uber-accent"></i> Analysis Summary
+            </h2>
+            <div class="grid md:grid-cols-2 gap-6" id="insights">
+                <div>
+                    <h3 class="text-xl font-medium mb-4 flex items-center">
+                        <i class="ri-number-line mr-2 text-uber-red"></i> Key Statistics
+                    </h3>
+                    <table class="w-full">
+                        <tr class="border-b"><td>Total Trips</td><td class="font-bold">{{ summary_stats.Total_Trips }}</td></tr>
+                        <tr class="border-b"><td>Avg Trip Duration</td><td class="font-bold">{{ summary_stats.Average_Trip_Duration }} mins</td></tr>
+                        <tr class="border-b"><td>Most Common Category</td><td class="font-bold">{{ summary_stats.Most_Common_Category }}</td></tr>
+                        <tr class="border-b"><td>Peak Time</td><td class="font-bold">{{ summary_stats.Peak_Time_Category }}</td></tr>
+                        <tr><td>Most Active Day</td><td class="font-bold">{{ summary_stats.Most_Active_Day }}</td></tr>
+                    </table>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4" >
+                    <h3 class="text-xl font-medium mb-4 flex items-center">
+                        <i class="ri-pie-chart-line mr-2 text-uber-accent"></i> Quick Insights
+                    </h3>
+                    <p class="text-gray-700">{{ insights }}</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="visualizations" class="bg-white rounded-xl shadow-md p-6 transform transition duration-500 hover:scale-[1.02]">
+            <h2 class="text-2xl font-semibold mb-6 flex items-center">
+                <i class="ri-bar-chart-2-line mr-3 text-uber-accent"></i> Visualizations
+            </h2>
+            <a href="{{ download_link }}" class="inline-block bg-uber-accent text-white px-4 py-2 rounded-md mb-6 hover:bg-uber-red transition duration-300 flex items-center">
+                <i class="ri-download-cloud-line mr-2"></i> Download All Visualizations
+            </a>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {% for image in ['category_distribution.png', 'trip_duration_boxplot.png', 'time_of_day_distribution.png', 'day_of_week_distribution.png','boxplot.png','miles_distribution.png','purpose_bar.png','purpose_countplot.png','purpose_distribution.png','time_of_day_pie.png','day_of_week_bar.png','category_pie_chart.png'] %}
+                <div class="bg-gray-50 rounded-lg p-4 text-center transform transition duration-300 hover:scale-105">
+                    <img src="{{ url_for('static', filename='output/' + image) }}" alt="{{ image }}" class="rounded-md mb-4 shadow-md">
+                    <h4 class="font-medium">{{ image | replace('_', ' ') | replace('.png', '') | title }}</h4>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section id="recommendations" class="bg-white rounded-xl shadow-md p-6 transform transition duration-500 hover:scale-[1.02]">
+            <h2 class="text-2xl font-semibold mb-6 flex items-center">
+                <i class="ri-rocket-line mr-3 text-uber-accent"></i> Recommendations
+            </h2>
+            <ul class="space-y-4">
+                <li class="flex items-start">
+                    <i class="ri-check-line mr-3 text-uber-red mt-1"></i>
+                    <span>Optimize driver allocation during peak hours to reduce wait times.</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="ri-check-line mr-3 text-uber-red mt-1"></i>
+                    <span>Implement surge pricing more effectively based on the time of day analysis.</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="ri-check-line mr-3 text-uber-red mt-1"></i>
+                    <span>Develop targeted promotions for less active days to boost ridership.</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="ri-check-line mr-3 text-uber-red mt-1"></i>
+                    <span>Investigate factors contributing to longer trip durations and work on optimizing routes.</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="ri-check-line mr-3 text-uber-red mt-1"></i>
+                    <span>Consider introducing new service categories based on the most common trip types.</span>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="bg-uber-dark-blue text-white py-6">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2023 Uber Trip Analysis Team. <i class="ri-copyright-line"></i> All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
